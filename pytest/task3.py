@@ -51,18 +51,18 @@ marker_style = ['o','^','s','v']
 ### question a)
 ################################################
 
-plt.figure(figsize=(2000/96, 2000/96), dpi=96)
+plt.figure(figsize=(2000/96, 2000/96), dpi=96)      ##opening an image object and setting image size
 
-for i in range(0,5):
-    plt.subplot(5,5,5*i+i+1)
+for i in range(0,5):                                ## for top 5 proteins of the original data set
+    plt.subplot(5,5,5*i+i+1)                        ## the density function to be plotted on the diagonals
     plt.title(df.columns[i+1], fontsize=10)
     min_value = float(np.min(df.ix[:,i+1]))
     max_value = float(np.max(df.ix[:,i+1]))
-    xs = np.linspace(min_value,max_value,500)
+    xs = np.linspace(min_value,max_value,500)       ## setting linespace for possible values of the protein
     k=0
     for cl in class_list:
-        index = np.where(df['class'] == cl)[0]
-        plot_density(df.ix[index,i+1],xs,col[k])
+        index = np.where(df['class'] == cl)[0]      ##selecting samples consisting of individuals classes
+        plot_density(df.ix[index,i+1],xs,col[k])    
         k+=1
     k=0
 ################################################
@@ -71,7 +71,7 @@ for i in range(0,5):
     
     for j in range(0,5):
         if i!=j:
-            plt.subplot(5,5,5*i+j+1)
+            plt.subplot(5,5,5*i+j+1)                ## non-diagonal subplot for scatter plots
             plt.title(df.columns[i+1] + " vs " + df.columns[j+1], fontsize=10)
             plt.xlabel(df.columns[i+1], fontsize=10)
             plt.ylabel(df.columns[j+1], fontsize=10)
@@ -79,6 +79,8 @@ for i in range(0,5):
                 index = np.where(df['class'] == class_list[k])[0]
                 plt.scatter(df.ix[index,1+i],df.ix[index,1+j],s=10,color = col[k],marker = marker_style[k], facecolors = 'none')
 
+
+## setting the legend 
 line=[]
 for i in range(0,4):
     line.append(mlines.Line2D([], [], color=col[i], marker=marker_style[i],markersize=10))
@@ -100,10 +102,10 @@ plt.show() #refer to the saved image for proper visualization
 #Also, we need not to calculate the distance consistency values twice for the (A,B)/(B,A) protein
 #pairs because the results calculation would be order independent.
           
-proteinPairList = [list(x) for x in ic(range(1,6),2)]
+proteinPairList = [list(x) for x in ic(range(1,6),2)]       ## making all possible pairs of index for 5 proteins
 max_d = 0
 for x in proteinPairList:
-    d = distance_consistency(df.ix[:,x[0]],df.ix[:,x[1]])
+    d = distance_consistency(df.ix[:,x[0]],df.ix[:,x[1]])   ## calculation of distance consistency score
     print("distance consistency for",df.columns[x[0]],"and",df.columns[x[1]],"=",d)
     if d > max_d:
         max_d = d

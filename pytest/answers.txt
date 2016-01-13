@@ -1,0 +1,33 @@
+task3,
+a)
+For S6, we can see a clear change of expression in t-CS-s to t-CS-m, making the drugged expression level more similar to normal c-CS-s.
+For S6, the drug changed expression strongly in normal mice.
+For P38, we can say that the drug has no effect on either phenotype. Though, there are other proteins in which we dont say any significant 
+change in expression values cause of protein, but all of them shows similar expression for normal and trisomic mice and the similarity cannot be trusted completely.
+
+b)
+Raptor and p38
+S6 and Tau
+
+c)
+maximum distance consistency is for Ubiquitin_N and Tau_N = 0.12
+
+d)
+I will select S6 and tau to make the decision. These two proteins have positively correlated expression data for 't-CS-m' class whereas for the normal mice saline "c-CS-s" class,
+there is no visible correlation between the two.
+I have plotted a scatter plot between the two proteins, the correlated one would let me know that the mouse class is "t-CS-m" while the uncorrelated would mean class "c-CS-s".
+
+task4,
+a) components needed to explain >95% variance = 8
+b) 	no effect	: 0,1,2,4
+	effect		: pca mode 4 (index 3)
+d) individual mice clusters contains mouse ID : 361, 322
+e) Number of components required increases to 20
+
+task5,
+f)
+disconnected nodes: 3417, 363, 3484. Except 3484, they are not correlated.
+c-CS-m seems to be strongly connected. No, there is no class for which I see no or very few connections between nodes in it.
+
+
+

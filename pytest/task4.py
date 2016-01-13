@@ -18,7 +18,7 @@ from sklearn.decomposition import PCA
 
 ################################################
 
-
+## Function to plot density plots
 def plot_density(data,xs,col):
     density = gaussian_kde(data)
     density.covariance_factor = lambda : .25
@@ -26,7 +26,7 @@ def plot_density(data,xs,col):
     plt.plot(xs,density(xs),color = col)
     
     
-    
+## Function to plot scatter plot matrix; explained in task 3
 def scatter_plot_matrix(data,class_labels,filename):
     plt.figure(figsize=(2000/96, 2000/96), dpi=96)
     for i in range(0,5):
@@ -60,7 +60,7 @@ def scatter_plot_matrix(data,class_labels,filename):
 
 
 
-    
+## Function to calculate F-score
 def fValue(protein, classLabel1, classLabel2, data):
     group1 = subgroup(data,classLabel1)
     group2 = subgroup(data,classLabel2)
@@ -73,9 +73,8 @@ def fValue(protein, classLabel1, classLabel2, data):
     return(f)
 
 
-
+###### Function to extract subgroups
 def subgroup(data, cl):
-    subDataFrame = pd.DataFrame()
     ind = np.where(class_labels == cl)[0]
     return data.iloc[ind,:]
 
@@ -95,7 +94,8 @@ marker_style = ['o','^','s','v']
 ### question a)
 ################################################
 
-index = []
+## extracting the required classes
+index = []                                      ## Would contain indexes of the selected rows 
 for i in range(0,len(df)):
     if df['class'].iloc[i] in class_list:
         index.append(i)
@@ -103,12 +103,14 @@ for i in range(0,len(df)):
 df = df.ix[index,:]
 class_labels = df['class']
 
+
+## filling the missing values
 a = df.ix[:,1:78]
 a = a.interpolate()
 a = a.interpolate(axis=1)
 
 pca = PCA()
-pca.fit(a)
+pca.fit(a)              ## Principal Component Analysis
 plt.plot(np.cumsum(pca.explained_variance_ratio_))
 print("Number of components to cover >=95% variance: ", np.where(np.cumsum(pca.explained_variance_ratio_) >= 0.95)[0][0] + 1)
 plt.title("Task4_figureA_Variance_vs_V")
@@ -122,8 +124,8 @@ plt.show()
 ################################################
 
 pca = PCA(n_components=5)
-pca_df = pd.DataFrame(pca.fit_transform(a))
-scatter_plot_matrix(pca_df,class_labels,"task4_figureB_PCA_top5.png")
+pca_df = pd.DataFrame(pca.fit_transform(a))             ## Extracting top5 Principal Component Values
+scatter_plot_matrix(pca_df,class_labels,"task4_figureB_PCA_top5.png")   ## Scatter Plot of the PC values
 
 
 ################################################
@@ -131,11 +133,11 @@ scatter_plot_matrix(pca_df,class_labels,"task4_figureB_PCA_top5.png")
 ################################################
 
 # From the visual inspection we can see that the outliers are predominant in the 3 pca component
-# The outliers are have a 3 component value of more than 2
+# The outliers have 3rd component value of more than 2
 
-outlier_in_pca = []
-[outlier_in_pca.append(x) for x in np.where(pca_df.ix[:,2] > 2)[0]]
-outlier_index = df['MouseID'][[index[x] for x in outlier_in_pca]]
+outlier_in_pca = []                         ## would contain index of outliers in reduced data
+[outlier_in_pca.append(x) for x in np.where(pca_df.ix[:,2] > 2)[0]]     
+outlier_index = df['MouseID'][[index[x] for x in outlier_in_pca]]       ##contains the index in original data    
 print("\n outlier from mode 3\n")
 print(outlier_index)
 
@@ -146,7 +148,7 @@ print(outlier_index)
 ### question d)
 ################################################
 
-a_new = a.drop(a.index[outlier_in_pca])
+a_new = a.drop(a.index[outlier_in_pca])         ##new data
 pca = PCA(n_components=5)
 pca_df = pd.DataFrame(pca.fit_transform(a_new))
 class_labels_new = pd.Series([cl for i, cl in enumerate(class_labels) if i not in outlier_in_pca])
@@ -180,14 +182,14 @@ print(outlier_index)
 ################################################
 
 
-c_cs_ind = np.where(class_labels == "c-CS-s")[0]
+c_cs_ind = np.where(class_labels == "c-CS-s")[0]            ##isolating normal sample
 
 # To calculate deviation from baseline I am using ratio as the measure, 
 # alternatively absolute change can also be used
 # but the statistical power of the two approaches would vary and 
 # calculation of that is beyond the scope of this study
 
-a_norm = a.div(a.iloc[c_cs_ind,:].mean())
+a_norm = a.div(a.iloc[c_cs_ind,:].mean())                   ##adjusting expression with reference to normal samples
 pca = PCA()
 pca.fit(a_norm)
 print("Number of components to cover >=95% variance: ", np.where(np.cumsum(pca.explained_variance_ratio_) >= 0.95)[0][0] + 1)

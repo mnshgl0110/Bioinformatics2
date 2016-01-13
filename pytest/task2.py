@@ -6,7 +6,6 @@ import pandas as pd
 import numpy as np
 
 
-
 ################################################
 
 ###### Function to extract subgroups
@@ -51,7 +50,7 @@ print("Colnames:", list(df.columns)) #Colnames
 #Interpolating to fill NaN values in each column
 df = df.interpolate()
 
-#Interpolation to fill NaN values which are in the beginnning of column (case 'BCL_2')
+#Interpolation to fill NaN values which are in the beginning of column (case 'BCL_2')
 df.ix[:,1:78] = df.ix[:,1:78].interpolate(axis=1)
 
 
@@ -76,6 +75,8 @@ print("Number of instances of class c-CS-m",len(group_cCSmem))
 ################################################
 ### question d)
 ################################################
+
+## Calculation of F-Value
 proteinFvalue = {}
 for i in range(1,len(df.columns)-4):
     proteinFvalue[df.columns[i]] = fValue(df.columns[i],"t-CS-s","c-CS-s",df)
@@ -88,10 +89,12 @@ top5 = sorted(proteinFvalue.items(),key = lambda x: x[1], reverse = True)[:5]
 ### question e)
 ################################################
 
+
+## Writing reduced data frame to disk
 proteinIDs = []
 for values in top5:
-    proteinIDs = proteinIDs + [values[0]]
-reduceDF = pd.concat([group_cCSmem,group_cCSsal,group_tCSmem,group_tCSsal])
-reduceDF = reduceDF.loc[:,["MouseID"]+proteinIDs+["Genotype","Treatment","Behavior","class"]]
+    proteinIDs = proteinIDs + [values[0]]               ##select top proteins' IDs
+reduceDF = pd.concat([group_cCSmem,group_cCSsal,group_tCSmem,group_tCSsal])     
+reduceDF = reduceDF.loc[:,["MouseID"]+proteinIDs+["Genotype","Treatment","Behavior","class"]]       ##selecting the reduced data frame
 print("top 5 proteins:", list(reduceDF.columns[1:6]))
 reduceDF.to_csv("reduced_df.csv",index=False)
